@@ -1,60 +1,67 @@
 package Bank;
 
 import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.regex.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.*;
 
-public class Bank_Application {
+public class Bank_Application{
+	
+	
+	ArrayList<Bank> data=new ArrayList<Bank>();
 	Scanner sc=new Scanner(System.in);
 	private String username;
 	private String password;
 	private String contact;
 	private double deposit,deposit2,amnt_transfer;
-	private double deposite_temp;
+	private double deposite_temp,Initial_deposit=0;
 	LocalDate date1,date2,date3;
 	LocalTime time1,time2,time3;
     private double credit;
     private  String name;
     private String add;
     private String payee_user1,payee_user2;
-    
+    private int f2=0,f3=0;
+    int count=0;
     
 	
+	 
+	 
 	//Register
-	
-	 void register(){
+	void register() throws IOException{
 		 
-		//String name;
-		//String contact;
+		String cont;
 		String uname;
 		String pname;
-		//String add;
 		System.out.println();
 		System.out.print("Enter name:");
-		name=sc.nextLine();
+		name=sc.next();
 		System.out.print("Enter address:");
-		add=sc.nextLine();
+		add=sc.next();
 		boolean d=false;
 		
 		while(d==false) {
 		System.out.print("Enter contact:");
-		contact=sc.nextLine();
+		cont=sc.next();
 		String exp4="\\d{10}";
-		d=contact.matches(exp4);
+		d=cont.matches(exp4);
 		if(d==false)
 		{
 			System.err.println("Enter contact again!");
 		}
+		contact=cont;
 	    }
 		
 		boolean b2=false,b1=false;
-		while(b2==false) {
-			
+		
+		while(b2==false) {	
 		System.out.print("Set username : ");
-		uname=sc.nextLine();
-		String exp1="\\w{1,}";
+		uname=sc.next();
+		String exp1="\\D{1,}";
 		b2=uname.matches(exp1);
 		if(b2==false)
 			System.err.println("Enter username again!");
@@ -66,27 +73,45 @@ public class Bank_Application {
 		
 		System.out.print("Set a password (minimum 8 chars; minimum 1 digit, 1 lowercase, 1 \r\n"
 				           + "uppercase, 1 special character[!@#$%^&*_]) :");
-		pname=sc.nextLine();
+		pname=sc.next();
 		String ex2="\\w{1,8}\\W{1}\\d{1,4}";
 	    b1=pname.matches(ex2);
 	    if(b1==false)
 	    	System.err.println("Enter password again!");
 	    password=pname;
-	    
 		}
 
+	//Initial Deposit
+		
 	 System.out.print("Enter initial deposit:");
-	 deposit=sc.nextDouble();
+	 Initial_deposit=sc.nextDouble();
 	 LocalDate d1 = LocalDate.now(); 
 	 date1=d1;
 	 LocalTime t1 = LocalTime.now();
 	 time1=t1;
-	 deposite_temp=deposit;
-	 deposit2=deposit;
+	 count++;
+	 deposit=Initial_deposit;
+	 deposit2=Initial_deposit;
 	 System.out.println();
-	 System.out.println((name)+" , Registration Successful....... ");
-	}
 	 
+	 data.add(new Bank(name,add,contact,username,password, deposit));
+	 
+	 System.out.println((name)+" , Registration Successful....... ");
+	 
+	 //String details in file
+	 
+	 File file1=new File("Files/data.db");
+		BufferedWriter br=new BufferedWriter(new FileWriter(file1,true));
+	    for(Bank val:data)
+	    {
+		  br.write(String.valueOf(val));
+		  br.newLine();
+		}
+		
+		br.close();
+	 
+	
+	} 
 	 //Deposit
 	 void deposit_() {
 		 double depo;
@@ -94,8 +119,8 @@ public class Bank_Application {
 		 System.out.print("Enter amount:");
 		 depo=sc.nextDouble();
 		 System.out.println("Rs. "+depo+" deposited successfully..");
-		 //credit=depo;
-		 credit=deposit2+depo; 
+		 credit=depo; 
+		 f3=1;
 		 deposit=deposit2+depo;
 		 LocalDate d2 = LocalDate.now(); 
 		 date2=d2;
@@ -103,6 +128,7 @@ public class Bank_Application {
 		 time2=t2;
 	 }
 	 
+	 //Transfer
 	 void transfer() {
 		 
 		 Scanner sc4=new Scanner(System.in);
@@ -122,7 +148,9 @@ public class Bank_Application {
 			 else
 			 {
 			 System.out.println(amnt_transfer+", Transferred to "+payee_user1+" successfully.");
+			 deposit2=amnt_transfer;
 			 deposit=deposit-amnt_transfer;
+			 f2=1;
 			 LocalDate d3 = LocalDate.now(); 
 			 date3=d3;
 			 LocalTime t3 = LocalTime.now();
@@ -133,20 +161,75 @@ public class Bank_Application {
 		 {
 			 System.out.println("Username doesn't exist.");
 		 }
+		 
+	
 	 }
 	 
+
+	//History
 	 void history() {
+		
+		 if(f3==1)
+		 {
+		 System.out.println("Rs. "+credit+" credited to your account. Balance -Rs. "+deposit+" as on "+date2+" at "+time2);
+		 }
+		 if(f2==1)
+		 {
+		 System.out.println("Rs. -"+deposit2+" Transferred to "+payee_user1+". Balance -Rs. "+deposit+" as on "+date3+" at "+time3);
+		 }
 		 
-		 System.out.println("Rs. "+amnt_transfer+" Transferred to "+payee_user1+". Balance -Rs. "+deposit+" as on "+date3+" at "+time3);
-		 System.out.println("Rs. "+credit+" credited to your account. Balance -Rs. "+credit+" as on "+date2+" at "+time2);
-		 System.out.println("Initial Deposit - Rs. "+deposite_temp+" as on "+date1+" at "+time1);
+		 System.out.println("Initial Deposit - Rs. "+deposit2+" as on "+date1+" at "+time1);
 		 
 	 }
 	 
-	 void userInformation() {
-		 System.out.println();
-		 System.out.println("Name : "+name+"\n"+"Contact number : "+contact+"\n"+"Address : "+add);
+	 //Shoe Balance
+	 
+	 void balance() {
+		 System.out.println("Available amount Rs "+deposit+".");
 	 }
+	 
+	 
+	 //User information
+	 void userInformation() {
+		 boolean b3=false;
+		 String pass ="";
+		 while(b3==false)
+			{
+			System.out.print("Enter Password:");
+			sc.nextLine();
+			pass=sc.nextLine();
+			String ex3="\\w{1,8}\\W{1}\\d{1,4}";
+		    b3=pass.matches(ex3);
+		    if(b3==false)
+		    	System.err.println("Enter password again!");
+			}
+	 
+	    for(Bank val:data)
+	    {  
+	    	
+	    	if(password.equals(val.password_))
+	    	{
+	    		System.out.println(val);
+	    		break;
+	    	}
+	    		
+	    }
+		
+	 
+	 
+	 }
+	 
+	 
+	 //Database
+	 void dataBase() {
+		 Iterator<Bank> db=data.iterator();
+		 while(db.hasNext())
+		 {
+			 System.out.println(db.next());
+		 }
+	 }
+	 
+	 //Update
 	 
 	void change_address(){
 		Scanner sc=new Scanner(System.in);
@@ -198,16 +281,6 @@ public class Bank_Application {
 	     }
 	 }
 		
-		
-	 
-		
-		 
-	 
-	 
-	 
-	 
-	 
-	 
 	
 	public static void main(String[] args) {
 		Bank_Application ba=new Bank_Application();
@@ -226,7 +299,11 @@ public class Bank_Application {
 		switch(ch)
 		{
 		case 1:
-			ba.register();
+			try {
+				ba.register();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		case 2:
 		     Scanner sc2=new Scanner(System.in);
@@ -235,7 +312,7 @@ public class Bank_Application {
 			 while(check1==false)
 			 {
 			 System.out.print("Enter user name:");
-			 uname2=sc2.nextLine();
+			 uname2=sc2.next();
 			 check1=uname2.equals(ba.username);
 				  
 				  if((uname2.equals(ba.username))==false)
@@ -246,7 +323,7 @@ public class Bank_Application {
 				 while(check2==false)
 				 {
 			      System.out.print("Enter Password:");
-			       pname2=sc2.nextLine();
+			       pname2=sc2.next();
 				   check2=pname2.equals(ba.password);
 				  if((pname2.equals(ba.password))==false)
 				  { 
@@ -262,7 +339,7 @@ public class Bank_Application {
 				System.out.println("W E L C O M E ");
 				System.out.println("--------------");
 				System.out.println();
-				System.out.println("1. Deposit."+"\n"+"2. Transfer."+"\n"+"3. Last 5 Transactions."+"\n"+"4. User information."+"\n"+"5. Log out");
+				System.out.println("1. Deposit."+"\n"+"2. Transfer."+"\n"+"3. Last 5 Transactions."+"\n"+"4. User information."+"\n"+"5. Show balance."+"\n"+"6. Show Database."+"\n"+"7. Log out.");
 				System.out.println();
 				System.out.print("Enter choice:");
 				c=sc2.nextInt();
@@ -280,13 +357,18 @@ public class Bank_Application {
 				case 4:
 					ba.userInformation();
 					break;
-					
-					
+				case 5:
+					ba.balance();
+					break;
+				case 6:
+					ba.dataBase();
+					break;
 				        }
-			    }while(c!=5);
-				 
+			    }while(c!=7);
+				 break;
 			
-		                }
+		       }
+			   
 		case 3:
 			
 			 Scanner sc4=new Scanner(System.in);
@@ -317,7 +399,9 @@ public class Bank_Application {
 				 
 			 }
 			 }while(choice!=5);
+			break;
 			
+		
 			
 			
 			
@@ -330,4 +414,28 @@ public class Bank_Application {
 
 }
 
+class Bank {
+	ArrayList<Bank> data=new ArrayList<Bank>();
+	String name_;
+	String add_;
+	String contact_;
+	String username_;
+	String password_;
+	double amount_;
+	public Bank(String name_, String add_, String contact_, String username_, String password_, double amount_) {
+		super();
+		this.name_ = name_;
+		this.add_ = add_;
+		this.contact_ = contact_;
+		this.username_ = username_;
+		this.password_ = password_;
+		this.amount_ = amount_;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "Name: "+name_+", Address: "+add_+", Contact: "+contact_+", Username: "+username_+", Password: "+password_+", Balance: "+amount_;
+	}
+}
 
