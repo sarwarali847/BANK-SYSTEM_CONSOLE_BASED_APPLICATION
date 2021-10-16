@@ -3,8 +3,13 @@ package Bank;
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -100,15 +105,16 @@ public class Bank_Application{
 	 
 	 //String details in file
 	 
-	 File file1=new File("Files/data.db");
-		BufferedWriter br=new BufferedWriter(new FileWriter(file1,true));
-	    for(Bank val:data)
-	    {
-		  br.write(String.valueOf(val));
-		  br.newLine();
-		}
-		
-		br.close();
+	 try {
+	  FileOutputStream fos=new FileOutputStream("Files/data2.db");  
+      ObjectOutputStream oos=new ObjectOutputStream(fos);  
+      oos.writeObject(data);  
+      fos.close();  
+      oos.close();  
+	 }
+	 catch (Exception e) {
+		 System.out.println(e.getMessage());
+	}
 	 
 	
 	} 
@@ -222,12 +228,22 @@ public class Bank_Application{
 	 
 	 //Database
 	 void dataBase() {
-		 Iterator<Bank> db=data.iterator();
-		 while(db.hasNext())
-		 {
-			 System.out.println(db.next());
-		 }
-	 }
+		 try {
+		 FileInputStream fis=new FileInputStream("Files/data2.db");  
+         ObjectInputStream ois=new ObjectInputStream(fis);  
+         ArrayList  list=(ArrayList)ois.readObject();  
+         System.out.println("[ ");
+         for(Object val:list)
+         {
+         System.out.println(val); 
+         }
+         System.out.println(" ]");
+     }
+		 catch(Exception e)  
+     {  
+         System.out.println(e);  
+     }  
+}
 	 
 	 //Update
 	 
@@ -414,7 +430,7 @@ public class Bank_Application{
 
 }
 
-class Bank {
+class Bank implements Serializable {
 	ArrayList<Bank> data=new ArrayList<Bank>();
 	String name_;
 	String add_;
