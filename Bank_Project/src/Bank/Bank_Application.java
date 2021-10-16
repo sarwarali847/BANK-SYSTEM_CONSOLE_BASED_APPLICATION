@@ -232,12 +232,12 @@ public class Bank_Application{
 		 FileInputStream fis=new FileInputStream("Files/data2.db");  
          ObjectInputStream ois=new ObjectInputStream(fis);  
          ArrayList  list=(ArrayList)ois.readObject();  
-         System.out.println("[ ");
+         
          for(Object val:list)
          {
          System.out.println(val); 
          }
-         System.out.println(" ]");
+       
      }
 		 catch(Exception e)  
      {  
