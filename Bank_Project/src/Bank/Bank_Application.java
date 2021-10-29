@@ -1,5 +1,4 @@
 package Bank;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,11 +33,10 @@ public class Bank_Application{
     private int f2=0,f3=0;
     int count=0;
     
-	
 	 
 	 
 	//Register
-	void register() throws IOException{
+    public void register() throws IOException{
 		 
 		String cont="";
 		String uname="";
@@ -80,7 +78,7 @@ public class Bank_Application{
 		System.out.print("Set a password (minimum 8 chars; minimum 1 digit, 1 lowercase, 1 \r\n"
 				           + "uppercase, 1 special character[!@#$%^&*_]) :");
 		pname=sc.next();
-		String ex2="\\w{1,8}\\W{1}\\d{1,4}";
+		String ex2="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
 	    b1=pname.matches(ex2);
 	    if(b1==false)
 	    	System.err.println("Enter password again!");
@@ -89,8 +87,6 @@ public class Bank_Application{
 
 	//Initial Deposit
 		
-	
-	
 	 System.out.print("Enter initial deposit:");
 	 Initial_deposit=sc.nextDouble();
 	 LocalDate d1 = LocalDate.now(); 
@@ -111,11 +107,11 @@ public class Bank_Application{
 	}  
 	 
 	 
-	 //Serialization
+	
 	
 	
 	//Storing into file
-	void storeintofile1() throws IOException
+	public void storeintofile1() throws IOException
 	{
 	File file=new File("Files/data.db");
     BufferedWriter br1=new BufferedWriter(new FileWriter(file));
@@ -128,6 +124,7 @@ public class Bank_Application{
     
 	}
 	
+	 //Serialization
 	void serialization() {
 		 try {
 			  FileOutputStream fos=new FileOutputStream("Files/data2.db");  
@@ -146,7 +143,7 @@ public class Bank_Application{
 	 
 	
 	 //Deposit
-	 void deposit_() {
+	 public void deposit_() {
 		 double depo;
 		 System.out.print("Enter amount:");
 		 depo=sc.nextDouble();
@@ -161,7 +158,7 @@ public class Bank_Application{
 	 }
 	 
 	 //Transfer
-	 void transfer() {
+	 public void transfer() {
 		
 		 double amnt_transfer;
 		 //String payee_user1, payee_user2;
@@ -175,7 +172,7 @@ public class Bank_Application{
 			 System.out.print("Enter amount to transfer:");
 			 amnt_transfer=sc.nextDouble();
 			 if(amnt_transfer>deposit)
-				 System.out.println("Insufficent amount!");
+				 System.err.println("Insufficent amount!");
 			 else
 			 {
 			 System.out.println(amnt_transfer+", Transferred to "+payee_user1+" successfully.");
@@ -198,7 +195,7 @@ public class Bank_Application{
 	 
 
 	//History
-	 void history() {
+	 public void history() {
 		
 		 if(f3==1)
 		 {
@@ -215,7 +212,7 @@ public class Bank_Application{
 	 
 	 //Show Balance
 	 
-	 void balance() {
+	 public void balance() {
 		 System.out.println("Available amount Rs "+deposit3+".");
 	 }
 	 
@@ -223,7 +220,7 @@ public class Bank_Application{
 	 
 	 
 	 //Deserialization 
-	 void deserialization() {
+	 public void deserialization() {
 
 		 try {
 		 FileInputStream fis=new FileInputStream("Files/data2.db");  
@@ -236,7 +233,6 @@ public class Bank_Application{
          { 
          System.out.println(val); 
          }
-        
        
      }
 		 catch(Exception e)  
@@ -248,7 +244,7 @@ public class Bank_Application{
 	 
     //Username and password
 	 
-    String us(){
+    public String us(){
 		 String uname= "";
 		 boolean check1=false;
        while(check1==false)
@@ -274,7 +270,7 @@ public class Bank_Application{
 	return uname;
    }
     
-    String ps(){
+    public String ps(){
 	
     	  String pname="";
     	  boolean check2=false;
@@ -303,7 +299,7 @@ public class Bank_Application{
 	 
 	 //Update
 	 
-	 void change_name() throws IOException
+	 public void change_name() throws IOException
 	 {   
 		 String u="",p="";
 		 u=us();
@@ -324,7 +320,7 @@ public class Bank_Application{
 		 
 	 }
 	 
-	void change_address() throws IOException {
+	public void change_address() throws IOException {
 		
 		
 		String u="",p="";
@@ -346,7 +342,7 @@ public class Bank_Application{
 		
 	}
 	
-	void change_contact() throws IOException  {
+	public void change_contact() throws IOException  {
 		String u="",p="";
 		u=us();
 		p=ps();
@@ -377,7 +373,7 @@ public class Bank_Application{
 		
 	}
 	
-	void change_username() throws IOException  {
+	public void change_username() throws IOException  {
 		String u="",p="";
 		u=us();
 		p=ps();
@@ -407,7 +403,7 @@ public class Bank_Application{
 		
 	}
 	
-	void change_password() throws IOException  {
+	public void change_password() throws IOException  {
 		String u="",p="";
 		u=us();
 		p=ps();
@@ -444,7 +440,7 @@ public class Bank_Application{
 	
 	//Login
 	
-	void login() {
+	public void login() {
 		 String uname2 = "",pname2="";
 		 boolean check1=false,check2=false;;
 		 while(check1==false)
@@ -498,18 +494,19 @@ public class Bank_Application{
 			System.out.println("W E L C O M E ");
 			System.out.println("--------------");
 			System.out.println();
-			System.out.println("1. Deposit."+"\n"+"2. Transfer."+"\n"+"3. Last Transactions."+"\n"+"4. User information."+"\n"+"5. Show balance."+"\n"+"6. Serialization."+"\n"+"7. Deserialization."+"\n"+"8. Sorted Data.\n"+"9. Show Encrypted Username & Password."+"\n"+"10. Show Decrpted Username & Password."+"\n"+"11. Log out.");
+			System.out.println("1. Transfer."+"\n"+"2. Deposit."+"\n"+"3. Last 5 Transactions."+"\n"+"4. User information."+"\n"+"5. Show balance."+"\n"+"6. Serialization."+"\n"+"7. Deserialization."+"\n"+"8. Sorted Data.\n"+"9. Show Encrypted Username & Password."+"\n"+"10. Show Decrpted Username & Password."+"\n"+"11. Log out.");
 			System.out.println();
 			System.out.print("Enter choice:");
 	
 			c=sc.nextInt();
 			switch(c)
 			{
+			
 			case 1:
-				deposit_();
+				transfer();
 				break;
 			case 2:
-				transfer();
+				deposit_();
 				break;
 			case 3:
 				history();
@@ -556,7 +553,7 @@ public class Bank_Application{
 
 
 	//Sorting Data 
-	void sort() {
+	public void sort() {
 		int choice;
 		//Iterator<Bank> show=data.iterator();
 		do {
@@ -618,7 +615,7 @@ public class Bank_Application{
 	
 	
 	//User information
-		 void userInformation() {
+		 public void userInformation() {
 			 String uname21 = "",pname21="";
 			 boolean check1=false,check2=false;;
 			 while(check1==false)
@@ -750,12 +747,7 @@ public class Bank_Application{
 				 
 			 }
 			 }while(choice!=6);
-			break;
-			
-		
-			
-			
-			
+			break;	
 			
 		}
 		
